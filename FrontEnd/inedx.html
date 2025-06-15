@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - Game Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white shadow-xl rounded-xl p-8 w-full max-w-md animate-fade-in-down">
+    <h1 class="text-2xl font-bold text-indigo-600 mb-4 text-center">Register to Play</h1>
+
+    <form id="registerForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">First Name</label>
+        <input type="text" id="name" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Last Name</label>
+        <input type="text" id="last_name" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Phone Number</label>
+        <input type="tel" id="phone_number" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Choose a Teammate (optional)</label>
+        <select id="team_mate_id" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+          <option value="">— No teammate —</option>
+        </select>
+      </div>
+
+      <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+        Register
+      </button>
+    </form>
+
+    <p id="statusMessage" class="text-center mt-4 text-sm"></p>
+  </div>
+
+<script>
+  async function loadSinglePlayers() {
+    const res = await fetch("http://127.0.0.1:3000/backend/data.php?action=get_single_players");
+    const json = await res.json();
+    const select = document.getElementById("team_mate_id");
+    const currentValue = select.value;
+
+    select.innerHTML = '<option value="">— No teammate —</option>';
+
+    if (json.status === "success") {
+      json.data.forEach(user => {
+        const option = document.createElement("option");
+        option.value = user.id;
+        option.textContent = `${user.name} ${user.last_name} (${user.phone_number})`;
+        if (user.id == currentValue) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      });
+    }
+  }
+
+  // Reload teammate list when input fields change
+  const nameInput = document.getElementById("name");
+  const lastNameInput = document.getElementById("last_name");
+//   nameInput.addEventListener("input", loadSinglePlayers);
+//   lastNameInput.addEventListener("input", loadSinglePlayers);
+
+  // Reload when select is focused (clicked or tabbed into)
+//   document.getElementById("team_mate_id").addEventListener("focus", loadSinglePlayers);
+  document.getElementById("name").addEventListener("focus", loadSinglePlayers);
+  document.getElementById("last_name").addEventListener("focus", loadSinglePlayers);
+
+  document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = nameInput.value.trim();
+    const last_name = lastNameInput.value.trim();
+    const phone_number = document.getElementById("phone_number").value.trim();
+    const team_mate_id = document.getElementById("team_mate_id").value || null;
+
+    const res = await fetch("http://127.0.0.1:3000/backend/data.php?action=register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, last_name, phone_number, team_mate_id })
+    });
+
+    const result = await res.json();
+    const status = document.getElementById("statusMessage");
+
+    if (result.status === "success") {
+    //   status.textContent = "✅ Registration successful!";
+    //   status.className = "text-green-600 text-center mt-4";
+    //   document.getElementById("registerForm").reset();
+    //   loadSinglePlayers();
+
+
+        Swal.fire({
+            icon: 'success',
+            title: 'You are in queue!',
+            text: '🎮 Registration successful. AC is turned on for you 🌀',
+            confirmButtonColor: '#6366f1', // Indigo
+            timer: 10000,
+            timerProgressBar: true
+        });
+
+        document.getElementById("registerForm").reset();
+        loadSinglePlayers();
+
+    } else {
+      status.textContent = "❌ " + result.message;
+      status.className = "text-red-600 text-center mt-4";
+    }
+  });
+
+  // Initial load + periodic refresh
+  loadSinglePlayers();
+  setInterval(loadSinglePlayers, 10000);
+</script>
+
+
+  <style>
+    @keyframes fade-in-down {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-down {
+      animation: fade-in-down 0.5s ease-out;
+    }
+  </style>
+</body>
+</html>
