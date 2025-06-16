@@ -48,7 +48,7 @@ def onOnToOff(channel, sampleIndex, val, prev):
 
     else:
         # If no players are available, create empty placeholder rows for clarity
-        for i in range(2):  # Creates 5 empty players (adjust as needed)
+        for i in range(1):  # Creates 5 empty players (adjust as needed)
             dat_table.appendRow([f'Player {i+1}', '', '', '', 'Waiting...'])
 
     return

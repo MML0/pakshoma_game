@@ -94,16 +94,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Switch on the action parameter for additional GET endpoints
     switch ($action) {
         case 'ready_check':
-            // Step 1: Get all users who are in queue and have a teammate
+            // Get all users in queue with teammates
             $stmt = $pdo->prepare("
                 SELECT * FROM users
-                WHERE game_stat = 'in queue' AND team_mate_id IS NOT NULL
+                WHERE game_stat = 'in queue'
+                AND team_mate_id IS NOT NULL
                 ORDER BY created_at ASC
             ");
             $stmt->execute();
             $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Step 2: Try to find a valid pair
+            // Loop to find a valid mutual team pair
             foreach ($users as $user) {
                 foreach ($users as $other) {
                     if (
@@ -111,27 +112,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                         $user['team_mate_id'] == $other['id'] &&
                         $other['team_mate_id'] == $user['id']
                     ) {
-                        // Valid mutual teammates found, update both to 'playing'
-                        $update = $pdo->prepare("UPDATE users SET game_stat = 'playing' WHERE id IN (?, ?)");
-                        $update->execute([$user['id'], $other['id']]);
+                        // Determine who hasn't been seen yet
+                        if ($user['seen_once'] == 0 && $other['seen_once'] == 0) {
+                            // First request: return first player
+                            $setSeen = $pdo->prepare("UPDATE users SET seen_once = 1 WHERE id = ?");
+                            $setSeen->execute([$user['id']]);
+                            echo json_encode([
+                                'status' => 'success',
+                                'data' => [$user]
+                            ]);
+                            exit;
+                        } elseif ($user['seen_once'] == 1 && $other['seen_once'] == 0) {
+                            // Second request: return second player, update both to playing
+                            $setSeen = $pdo->prepare("UPDATE users SET game_stat = 'playing' WHERE id IN (?, ?)");
+                            $setSeen->execute([$user['id'], $other['id']]);
 
-                        echo json_encode([
-                            'status' => 'success',
-                            'data' => [$user, $other]
-                        ]);
-                        exit;
+                            $clearSeen = $pdo->prepare("UPDATE users SET seen_once = 0 WHERE id IN (?, ?)");
+                            $clearSeen->execute([$user['id'], $other['id']]);
+
+                            echo json_encode([
+                                'status' => 'success',
+                                'data' => [$other]
+                            ]);
+                            exit;
+                        }
                     }
                 }
             }
 
-            // No valid pair found
+            // No ready pairs found
             echo json_encode([
                 'status' => 'waiting',
-                'message' => 'No ready pair of teammates found in queue.'
+                'message' => 'No valid teammate pair found.'
             ]);
             exit;
-
-
 
         case 'get_single_players':
             // Get all users who don't have a team_mate_id and aren’t assigned as someone else’s team_mate_id.

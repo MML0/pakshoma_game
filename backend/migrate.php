@@ -32,6 +32,7 @@ CREATE TABLE users (
     team_mate_id INT DEFAULT NULL,
     play_time FLOAT DEFAULT 0, -- In minutes
     phone_number VARCHAR(20) NOT NULL,
+    seen_once TINYINT(1) DEFAULT 0, -- For alternating team member access
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (team_mate_id) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
