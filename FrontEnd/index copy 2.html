@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ثبت‌نام بازی</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Vazirmatn', sans-serif;
+      background: linear-gradient(to bottom right, #fdfdfd, #f3faff);
+      color: #1e3a8a;
+    }
+
+    header {
+      background: linear-gradient(to right, #4f46e5, #4338ca);
+      padding: 1rem;
+      text-align: center;
+      color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 2rem auto;
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #1e40af;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      direction: rtl;
+    }
+
+    button {
+      width: 100%;
+      background: linear-gradient(to right, #6366f1, #4f46e5);
+      color: white;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #4f46e5, #4338ca);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background-color: #312e81;
+      color: #c7d2fe;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>به بازی خود خوش آمدید</h1>
+    <p>پلتفرم بازی آنلاین</p>
+  </header>
+
+  <div class="container">
+    <form id="gameForm">
+      <label for="firstName">نام</label>
+      <input type="text" id="firstName" name="firstName" placeholder="مثلاً علی" required>
+
+      <label for="lastName">نام خانوادگی</label>
+      <input type="text" id="lastName" name="lastName" placeholder="مثلاً رضایی" required>
+
+      <label for="mobile">شماره موبایل</label>
+      <input type="tel" id="mobile" name="mobile" placeholder="09123456789" pattern="[0-9]{11}" required>
+
+      <label for="teammate">انتخاب هم‌تیمی (اختیاری)</label>
+      <select id="teammate" name="teammate">
+        <option value="">-- انتخاب کنید --</option>
+        <option>احمد رضایی</option>
+        <option>فاطمه محمدی</option>
+        <option>علی حسینی</option>
+        <option>مریم کریمی</option>
+        <option>حسن احمدی</option>
+        <option>زهرا موسوی</option>
+        <option>محمد جعفری</option>
+        <option>سارا نوری</option>
+      </select>
+
+      <button type="submit">ثبت اطلاعات</button>
+    </form>
+  </div>
+
+  <footer>
+    © ۱۴۰۳ سیستم مدیریت تیم. تمامی حقوق محفوظ است.
+  </footer>
+
+  <script>
+    document.getElementById("gameForm").addEventListener("submit", function(e) {
+      e.preventDefault()
+
+      const firstName = document.getElementById("firstName").value.trim()
+      const lastName = document.getElementById("lastName").value.trim()
+      const mobile = document.getElementById("mobile").value.trim()
+
+      if (!firstName || !lastName || !mobile) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'اطلاعات ناقص!',
+          text: 'لطفاً تمام فیلدهای الزامی را پر کنید.',
+          confirmButtonColor: '#f59e0b'
+        })
+        return
+      }
+
+      // Show success alert
+      Swal.fire({
+        icon: 'success',
+        title: 'You are in queue!',
+        text: '🎮 Registration successful. AC is turned on for you 🌀',
+        confirmButtonColor: '#6366f1',
+        timer: 10000,
+        timerProgressBar: true
+      })
+
+      // Optionally clear the form
+      this.reset()
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>صفحه ورود بازی</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #fffbea, #ffffff);
+      background: linear-gradient(to bottom right, #81aeba, #0a1043);
+      color: #1e40af;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      text-align: right;
+      font-family: "Vazirmatn", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    header {
+      width: 100%;
+      background: linear-gradient(to right, #2563eb, #1e40af);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 1rem 0;
+      text-align: center;
+      color: white;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+    main {
+      width: 100%;
+      max-width: 450px;
+    }
+    .card {
+      background: rgba(255 255 255 / 0.95);
+      backdrop-filter: blur(12px);
+      border-radius: 10px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      padding: 2rem;
+    }
+    .card-header {
+      background: linear-gradient(to right, #3b82f6, #2563eb);
+      border-radius: 8px 8px 0 0;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      margin: -2rem -2rem 1.5rem -2rem;
+    }
+    .card-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      color: #2563eb;
+      margin-bottom: 0.5rem;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1.5px solid #93c5fd;
+      border-radius: 6px;
+      outline-offset: 2px;
+      outline-color: #3b82f6;
+      text-align: right;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-sizing: border-box;
+    }
+    input:focus, select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 5px #2563eb;
+    }
+    .help-text {
+      font-size: 0.85rem;
+      color: #2563eb;
+      margin-top: 0.25rem;
+    }
+    button {
+      background: linear-gradient(to right, #2563eb, #1e40af);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 8px;
+      box-shadow: 0 8px 15px rgba(37, 99, 235, 0.4);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    button:hover {
+      background: linear-gradient(to right, #1e40af, #1e3a8a);
+      box-shadow: 0 12px 20px rgba(30, 64, 175, 0.6);
+    }
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: #93c5fd;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎮 به بازی خود خوش آمدید</h1>
+    <p>پلتفرم بازی آنلاین</p>
+  </header>
+
+  <main>
+    <section class="card" role="region" aria-labelledby="formTitle">
+      <div class="card-header">
+        <h2 id="formTitle">🧑‍🤝‍🧑 صفحه ورود</h2>
+        <p>اطلاعات خود را جهت شرکت در بازی وارد کنید</p>
+      </div>
+      <form id="registerForm" novalidate>
+        <div>
+          <label for="name">نام</label>
+          <input type="text" id="name" name="name" placeholder="نام خود را وارد کنید" required />
+        </div>
+
+        <div>
+          <label for="last_name">نام خانوادگی</label>
+          <input type="text" id="last_name" name="last_name" placeholder="نام خانوادگی خود را وارد کنید" required />
+        </div>
+
+        <div>
+          <label for="phone_number">شماره تلفن همراه</label>
+          <input type="tel" id="phone_number" name="phone_number" placeholder="09123456789" pattern="[0-9]{11}" required />
+          <div class="help-text">مثال: 09123456789</div>
+        </div>
+
+        <div>
+          <label for="team_mate_id">انتخاب هم تیمی</label>
+          <select id="team_mate_id" name="team_mate_id" required>
+            <option value="" disabled selected>هم تیمی خود را انتخاب کنید</option>
+          </select>
+        </div>
+
+        <button type="submit">ثبت اطلاعات</button>
+        <div id="statusMessage"></div>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>© ۱۴۰۳ سیستم مدیریت تیم. تمامی حقوق محفوظ است.</p>
+  </footer>
+
+  <script>
+    async function loadSinglePlayers() {
+      try {
+        const res = await fetch("http://mml-dev.ir/paakshoma/data.php?action=get_single_players");
+        const json = await res.json();
+        const select = document.getElementById("team_mate_id");
+        const currentValue = select.value;
+
+        select.innerHTML = '<option value="" disabled selected>هم تیمی خود را انتخاب کنید</option>';
+
+        if (json.status === "success") {
+          json.data.forEach(user => {
+            const option = document.createElement("option");
+            option.value = user.id;
+            option.textContent = `${user.name} ${user.last_name} (${user.phone_number})`;
+            if (user.id == currentValue) {
+              option.selected = true;
+            }
+            select.appendChild(option);
+          });
+        }
+      } catch (err) {
+        console.error("خطا در بارگذاری هم تیمی‌ها", err);
+      }
+    }
+
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const last_name = document.getElementById("last_name").value.trim();
+      const phone_number = document.getElementById("phone_number").value.trim();
+      const team_mate_id = document.getElementById("team_mate_id").value || null;
+
+      if (!name || !last_name || !phone_number) {
+        Swal.fire('لطفا همه فیلدها را پر کنید');
+        return;
+      }
+
+      try {
+        const res = await fetch("http://mml-dev.ir/paakshoma/data.php?action=register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, last_name, phone_number, team_mate_id })
+        });
+
+        const result = await res.json();
+
+        if (result.status === "success") {
+          Swal.fire({
+            icon: 'success',
+            title: '🎮 اطلاعات شما ثبت شد!',
+            text: 'شما در صف قرار گرفتید و سیستم برای شما فعال شد 🌀',
+            confirmButtonColor: '#6366f1',
+            timer: 10000,
+            timerProgressBar: true
+          });
+
+          document.getElementById("registerForm").reset();
+          loadSinglePlayers();
+
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'خطا',
+            text: result.message || 'مشکلی در ثبت نام وجود دارد'
+          });
+        }
+      } catch (err) {
+        console.error("خطا در ثبت نام", err);
+        Swal.fire('خطا در ارتباط با سرور');
+      }
+    });
+
+    loadSinglePlayers();
+    setInterval(loadSinglePlayers, 10000);
+  </script>
+
+</body>
+</html>

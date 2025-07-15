@@ -5,6 +5,7 @@ import time
 # Replace with your actual API URL
 API_URL = "http://mml-dev.ir/pakshoma_game/data.php"
 API_URL = "http://127.0.0.1:3000/backend/data.php"
+API_URL = "http://mml-dev.ir/paakshoma/data.php"
 
 # Function to generate random user data
 def generate_user():
