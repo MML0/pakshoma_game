@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ثبت‌نام بازی</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+   body {
+  margin: 0;
+  font-family: 'Vazirmatn', sans-serif;
+  background: url('001-01.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #1e3a8a;
+}
+
+.swal2-container::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: -1;
+}
+
+    .container {
+  max-width: 500px;
+  margin: 800px auto 0 auto; /* فاصله از بالا: 150px */
+  /* background-color: rgba(255, 255, 255, 0.95); */
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  display: none;
+}
+
+    .form-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+.form-row label {
+  flex: 0 0 120px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #6e8e59; /* رنگ لیمویی روشن (Cornsilk) */
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.3rem;
+  text-align: center;
+  user-select: none; /* جلوگیری از انتخاب متن */
+}
+
+.form-row input,
+.form-row select {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+  direction: rtl;
+  background-color: #00546E; /* رنگ آبی روشن */
+  color: white;
+  outline: none;
+  appearance: none;
+}
+
+/* برای بهتر شدن ظاهر placeholder در input */
+.form-row input::placeholder {
+  color: #dbeafe;
+}
+
+/* برای select رنگ متن و فلش به صورت سفید */
+select {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffffff' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 1rem;
+  padding-right: 2rem;
+  cursor: pointer;
+  color: white;
+}
+
+
+    button {
+      width: 100%;
+      background: linear-gradient(to right, #00546E, #00546E);
+      color: white;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+    }
+
+    button:hover {
+  background: linear-gradient(to right, #4f46e5, #4338ca);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+  transform: scale(1.03);
+}
+
+
+    button:hover {
+      background: linear-gradient(to right, #00546E, #00546E);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background-color: #00546E;
+      color: #c7d2fe;
+      margin-top: 3rem;
+    }
+.start-btn-img {
+  width: 300px;           /* یا اندازه‌ای که مدنظرته */
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  border-radius: 1rem;    /* در صورت نیاز */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.start-btn-img:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+}
+
+    /* دکمه شروع وسط پایین صفحه */
+    #startScreen {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      width: auto;
+      height: auto;
+      top: auto;
+      right: auto;
+    }
+
+    .start-btn {
+      width: 250px;
+      height: 50px;
+      padding: 0;
+      font-size: 1rem;
+      font-weight: bold;
+      background-color: #00546E;
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .start-btn:hover {
+  background-color: #4f46e5;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
+}
+
+
+    input:hover,
+select:hover {
+  border: 2px solid #00546E;
+  background-color: #09273b;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+  transition: all 0.3s ease-in-out;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #00546E;
+  box-shadow: 0 0 10px rgba(80, 73, 152, 0.6);
+  background-color: #00546E;
+}
+
+label:hover {
+  color: #00546E;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- صفحه شروع -->
+  <div id="startScreen">
+    <img src="Asset 2.png" alt="شروع" class="start-btn-img" onclick="startGame()" />
+
+  </div>
+
+  <div class="container" id="formContainer">
+    <form id="gameForm">
+      <div class="form-row">
+        <label for="firstName">نام:</label>
+        <input type="text" id="firstName" name="firstName" placeholder="مثلاً علی" required>
+      </div>
+
+      <div class="form-row">
+        <label for="lastName">نام خانوادگی:</label>
+        <input type="text" id="lastName" name="lastName" placeholder="مثلاً رضایی" required>
+      </div>
+
+      <div class="form-row">
+        <label for="mobile">شماره موبایل:</label>
+        <input type="tel" id="mobile" name="mobile" placeholder="09123456789" pattern="[0-9]{11}" required>
+      </div>
+
+      <div class="form-row">
+        <label for="teammate">انتخاب هم‌تیمی (اختیاری):</label>
+        <select id="teammate" name="teammate">
+          <option value="">-- انتخاب کنید --</option>
+          <option>احمد رضایی</option>
+          <option>فاطمه محمدی</option>
+          <option>علی حسینی</option>
+          <option>مریم کریمی</option>
+          <option>حسن احمدی</option>
+          <option>زهرا موسوی</option>
+          <option>محمد جعفری</option>
+          <option>سارا نوری</option>
+        </select>
+      </div>
+
+      <button type="submit">ثبت اطلاعات</button>
+    </form>
+  </div>
+
+  <footer>
+    © ۱۴۰۳ سیستم مدیریت تیم. تمامی حقوق محفوظ است.
+  </footer>
+
+<script>
+  function startGame() {
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("formContainer").style.display = "block";
+
+  // تغییر بک‌گراند به تصویر فرم ثبت‌نام
+  document.body.style.background = "url('Sabte Nam-02.jpg') no-repeat center center fixed";
+  document.body.style.backgroundSize = "cover";
+}
+
+
+  document.getElementById("gameForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
+    const mobile = document.getElementById("mobile").value.trim();
+
+    if (!firstName || !lastName || !mobile) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'اطلاعات ناقص!',
+        text: 'لطفاً تمام فیلدهای الزامی را پر کنید.',
+        confirmButtonColor: '#f59e0b'
+      });
+      return;
+    }
+
+
+  Swal.fire({
+  html: `
+    <div style="position: relative; width: 100%; max-width: 400px; margin: 0 auto;">
+      <img src="Asset 4.png" style="width: 100%; border-radius: 1rem;" />
+      <div style="
+        position: absolute;
+        top: 55%;
+        left: 45%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 1.4rem;
+        font-weight: bold;
+        text-shadow: 1px 1px 6px black;
+        text-align: center;
+        padding: 0 1rem;
+      ">
+        ${firstName} عزیز، قبل از ورود به بازی برات کولر زدیم!
+      </div>
+    </div>
+  `,
+  background: 'transparent',
+  showConfirmButton: false,
+  timer: 60000,
+  width: '100%',
+  padding: 0,
+  backdrop: 'rgba(0,0,0,0.6)' ,
+
+
+
+  // استفاده از blur بدون تیرگی رنگ
+  backdrop: `
+    rgba(255, 255, 255, 0.0)
+    left top
+    no-repeat
+  `,
+  customClass: {
+    popup: 'custom-blur-alert'
+  },
+
+  showClass: {
+    popup: 'swal2-show swal2-animate__fadeInDown'
+  },
+  hideClass: {
+    popup: 'swal2-hide swal2-animate__fadeOutUp'
+  }
+
+  
+});
+document.addEventListener('click', () => {
+    location.reload();
+  }, { once: true });
+
+
+    this.reset();
+  });
+</script>
+
+
+</body>
+</html>
